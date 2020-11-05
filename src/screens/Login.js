@@ -1,132 +1,123 @@
-// /**
-//  * Sample React Native App
-//  * https://github.com/facebook/react-native
-//  *
-//  * @format
-//  * @flow strict-local
-//  */
 
-// import React from 'react';
-// import {
-//   SafeAreaView,
-//   StyleSheet,
-//   ScrollView,
-//   View,
-//   Text,
-//   StatusBar,
-// } from 'react-native';
-
-// import {
-//   Header,
-//   LearnMoreLinks,
-//   Colors,
-//   DebugInstructions,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
-
-// const App: () => React$Node = () => {
-//   return (
-//     <>
-//       <StatusBar barStyle="dark-content" />
-//       <SafeAreaView>
-//         <ScrollView
-//           contentInsetAdjustmentBehavior="automatic"
-//           style={styles.scrollView}>
-//           <Header />
-//           {global.HermesInternal == null ? null : (
-//             <View style={styles.engine}>
-//               <Text style={styles.footer}>Engine: Hermes</Text>
-//             </View>
-//           )}
-//           <View style={styles.body}>
-//             <View style={styles.sectionContainer}>
-//               <Text style={styles.sectionTitle}>Step One</Text>
-//               <Text style={styles.sectionDescription}>
-//                 Edit <Text style={styles.highlight}>App.js</Text> to change this
-//                 screen and then come back to see your edits.
-//               </Text>
-//             </View>
-//             <View style={styles.sectionContainer}>
-//               <Text style={styles.sectionTitle}>See Your Changes</Text>
-//               <Text style={styles.sectionDescription}>
-//                 <ReloadInstructions />
-//               </Text>
-//             </View>
-//             <View style={styles.sectionContainer}>
-//               <Text style={styles.sectionTitle}>Debug</Text>
-//               <Text style={styles.sectionDescription}>
-//                 <DebugInstructions />
-//               </Text>
-//             </View>
-//             <View style={styles.sectionContainer}>
-//               <Text style={styles.sectionTitle}>Learn More</Text>
-//               <Text style={styles.sectionDescription}>
-//                 Read the docs to discover what to do next:
-//               </Text>
-//             </View>
-//             <LearnMoreLinks />
-//           </View>
-//         </ScrollView>
-//       </SafeAreaView>
-//     </>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   scrollView: {
-//     backgroundColor: Colors.lighter,
-//   },
-//   engine: {
-//     position: 'absolute',
-//     right: 0,
-//   },
-//   body: {
-//     backgroundColor: Colors.white,
-//   },
-//   sectionContainer: {
-//     marginTop: 32,
-//     paddingHorizontal: 24,
-//   },
-//   sectionTitle: {
-//     fontSize: 24,
-//     fontWeight: '600',
-//     color: Colors.black,
-//   },
-//   sectionDescription: {
-//     marginTop: 8,
-//     fontSize: 18,
-//     fontWeight: '400',
-//     color: Colors.dark,
-//   },
-//   highlight: {
-//     fontWeight: '700',
-//   },
-//   footer: {
-//     color: Colors.dark,
-//     fontSize: 12,
-//     fontWeight: '600',
-//     padding: 4,
-//     paddingRight: 12,
-//     textAlign: 'right',
-//   },
-// });
-
-// export default App;
-import React from 'react'
+import React, { Component } from 'react'
 import {View ,Text ,StyleSheet} from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import {Item,Input } from 'native-base'
+import auth from '@react-native-firebase/auth'
 
-const Login =()=>{
-  return(
-   <View style={s.container}>
-       <Text>Login</Text>
-   </View>
-  )
-}
+// const Login =()=>{
+    class Login extends Component{
+        state = {
+            email: 'tayyaba@gmail.com',
+            password: '123456',
+            
+        }
+    login=()=>{
+        
+        const{ email,password,}= this.state
+        auth().signInWithEmailAndPassword(email, password)
+            .then(async(loggedInUser) => {
+                console.log("useer",loggedInUser)
+                    this.props.navigation.navigate('Home')
+            })
+    }
+        render(){
+            const{ email,password,}= this.state
+            return(
+                <View 
+                // style={s.container}
+                >
+            
+            <View style={s.header}>
+            <Text style={s.headerText}>Login</Text>
+        </View>
+        
+
+        <Item style={s.inputStyle} rounded>
+
+            <Input
+                style={s.inputTextStyle}
+                placeholder="Enter your email"
+                // placeholderTextColor='black'
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={email}
+                onChangeText={(x) => this.setState({ email: x })}
+
+            />
+
+        </Item>
+
+        <Item style={s.inputStyle} rounded>
+
+            <Input
+                style={s.inputTextStyle}
+                placeholder="Enter your password"
+                // placeholderTextColor='black'
+                autoCapitalize="none"
+                autoCorrect={false}
+                value={password}
+                onChangeText={(x) => this.setState({ password: x })}
+                secureTextEntry={true}
+
+
+            />
+
+        </Item>
+
+        <View style={{ backgroundColor: 'blue', width: '80%', alignSelf: 'center', marginVertical: 10, padding: 10, borderRadius: 15 }}>
+                    {/* <Text style={{ color: 'grey' }} >Already have an Account? </Text> */}
+                    <TouchableOpacity
+                        style={{ alignSelf: "center", justifyContent: 'center' }}
+                        onPress={() => {
+                            // this.validation()
+                            this.login()
+                            // this.props.navigation.navigate('LoginScreen')
+                        }}
+                    >
+                        <Text style={{ color: '#fff', textAlign: "center" }}>Login</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+
+</View>
+            )
+            
+        }
+    }
+
 const s = StyleSheet.create({
     container:{
         flex :1,
         justifyContent:"center",
         alignSelf:"center"
+    },
+    inputStyle: {
+        width: "80%",
+        alignSelf: "center",
+        justifyContent: "center",
+        borderWidth: 0,margin:10
+    },  
+    inputTextStyle:{
+        // padding:10
+        // paddingHorizontal:40
+    },  
+    mainContainer:{
+        flex:1,
+        justifyContent:'center',
+        // alignSelf:'center'
+    },
+    header:{
+        width:'80%',
+        alignSelf:'center',
+        // backgroundColor:'red',
+        height:100,
+        // marginBottom:20
+    },
+    headerText:{
+        fontSize:30,
+        textAlign:'center'
     }
 })
 

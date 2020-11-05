@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import {Item,Input } from 'native-base'
 import auth from '@react-native-firebase/auth'
 // const Signup =({navigation})=>{
+    import firestore from '@react-native-firebase/firestore';
 class Signup extends React.Component {
 
     state = {
@@ -22,7 +23,22 @@ class Signup extends React.Component {
         console.log("res",user)
 
 
-     
+        firestore()
+        .collection('Users')
+        .doc(user_id)
+        .set({
+          name: name,
+          contact: contactNumber,
+          user_id:user_id
+        })
+        .then(() => {
+          console.log('User added!');
+            this.props.navigation.navigate('LoginScreen')
+
+        })
+        .catch((error)=>console.log("error msg is", error.message));
+
+
         })
         .catch(error => {
             console.log("error msg is", error.message)
